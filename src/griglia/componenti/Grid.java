@@ -1,8 +1,11 @@
-package griglia;
+package griglia.componenti;
 
+import griglia.Memento;
 import griglia.interfacce.CellIF;
 import griglia.interfacce.Constraint;
 import griglia.interfacce.GridIF;
+
+import java.util.LinkedList;
 
 public class Grid implements GridIF {
    private static CellIF[][] grid;
@@ -20,16 +23,15 @@ public class Grid implements GridIF {
 
 
 
-
     @Override
     public void addValue(int val, int x, int y) {
-        if(x>0 && x<dimensione && y>0 && y<dimensione)
+        if(x>=0 && x<dimensione && y>=0 && y<dimensione)
             grid[x][y].setValue(val);
     }//addValue
 
     @Override
     public int getValue(int x, int y) {
-        if(x>0 && x<dimensione && y>0 && y<dimensione)
+        if(x>=0 && x<dimensione && y>=0 && y<dimensione)
             return grid[x][y].getValue();
         return -1;
     }//getValue
@@ -79,20 +81,50 @@ public class Grid implements GridIF {
 
     @Override
     public CellIF getCell(int x, int y) {
-        if(x>0 && x<dimensione && y>0 && y<dimensione)
+        if(x>=0 && x<dimensione && y>=0 && y<dimensione)
             return grid[x][y];
         return null;
     }
 
     @Override
     public boolean isLegal(int val, int x, int y) {
-        return false;
+        addValue(val, x, y);
+        boolean ret = grid[x][y].getState();
+        removeValue(x,y);
+        return ret;
     }
 
     @Override
     public boolean isCompleted() {
-        return false;
-    }
+        for(int i=0; i<dimensione; i++){
+            for(int j=0; j<dimensione; j++){
+                if(!grid[i][j].getState())
+                    return false;
+            }
+        }
+        return true;
+    }//isCompleted
+
+
+    public static boolean verifyPositive(Cell c){
+       return c.getValue()>=1 && c.getValue()<=dimensione;
+    }//verifyPositive
+
+
+    public static LinkedList<CellIF> verifyRowCol(Cell c){
+       LinkedList<CellIF> ret = new LinkedList<>();
+        for (int i = 0; i < dimensione; i++) {
+            // Controllo sulla stessa riga
+            if (i != c.getY() && c.getValue() == grid[c.getX()][i].getValue()) {
+                ret.add(grid[c.getX()][i]);
+            }
+            // Controllo sulla stessa colonna
+            if (i != c.getX() && c.getValue() == grid[i][c.getY()].getValue()) {
+                ret.add(grid[i][c.getY()]);
+            }
+        }
+       return ret;
+    }//verifyOnGrid
 
     public String toString() {
 

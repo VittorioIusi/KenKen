@@ -1,10 +1,11 @@
-package griglia;
+package griglia.componenti;
 
+import griglia.Operazione;
 import griglia.interfacce.CellIF;
 import griglia.interfacce.Constraint;
 
 import java.util.LinkedList;
-import java.util.Set;
+import java.util.List;
 
 public class Cage implements Constraint {
     private LinkedList<CellIF> cells;
@@ -12,7 +13,7 @@ public class Cage implements Constraint {
     private int target;
 
     public Cage(){
-        cells = new LinkedList<>();
+        cells = new LinkedList<CellIF>();
     }//costruttore
 
     @Override
@@ -23,5 +24,16 @@ public class Cage implements Constraint {
     @Override
     public void setValues(int t) {
         this.target = t;
+        this.op = Operazione.Addizione;
     }//setValues
+
+    @Override
+    public boolean verify(){
+        List<Integer> l = new LinkedList<>();
+        for(CellIF ec : cells){
+            l.add(ec.getValue());
+        }
+        return op.doOp(l) == target;
+    }//verify
+
 }

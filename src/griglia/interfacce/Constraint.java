@@ -5,4 +5,5 @@ public interface Constraint {
     //modifica
     void addCell(CellIF ec);
     void setValues(int t);
+    boolean verify();
 }//Constraint

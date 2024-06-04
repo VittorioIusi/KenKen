@@ -1,4 +1,4 @@
-package griglia.interfacce;
+package main.griglia.interfacce;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
-package griglia;
+package main.griglia;
 
-import griglia.interfacce.Operable;
+import main.griglia.interfacce.Operable;
 
 import java.util.List;
 

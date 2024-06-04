@@ -1,11 +1,14 @@
-package griglia.interfacce;
+package main.griglia.interfacce;
 
-import griglia.Memento;
+import main.griglia.Memento;
 
 public interface GridIF {
 
     void addValue(int val,int x, int y);
     int getValue(int x, int y);
+    void addValueNC(int val,int x, int y);
+
+
     boolean getState(int x, int y);
     void removeValue(int x, int y);
     void clean();
@@ -24,8 +27,8 @@ public interface GridIF {
 
 
     //util
-    //void switchRow(int i, int j);
-    //void switchColumn(int i, int j);
+    void switchRow(int i, int j);
+    void switchColumn(int i, int j);
     //String constrString();
     //List<Constraint> listOfConstraint();
     //Generator getGenerator();

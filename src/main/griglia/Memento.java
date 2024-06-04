@@ -1,6 +1,6 @@
-package griglia;
+package main.griglia;
 
-import griglia.interfacce.CellIF;
+import main.griglia.interfacce.CellIF;
 
 public class Memento {
     private CellIF[][] griglia;

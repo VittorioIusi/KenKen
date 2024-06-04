@@ -1,9 +1,9 @@
-package griglia.componenti;
+package main.griglia.componenti;
 
-import griglia.Memento;
-import griglia.interfacce.CellIF;
-import griglia.interfacce.Constraint;
-import griglia.interfacce.GridIF;
+import main.griglia.Memento;
+import main.griglia.interfacce.CellIF;
+import main.griglia.interfacce.Constraint;
+import main.griglia.interfacce.GridIF;
 
 import java.util.LinkedList;
 
@@ -29,6 +29,12 @@ public class Grid implements GridIF {
             grid[x][y].setValue(val);
     }//addValue
 
+
+    @Override
+    public void addValueNC(int val, int x, int y) {
+       grid[x][y].setValueNC(val);
+    }
+
     @Override
     public int getValue(int x, int y) {
         if(x>=0 && x<dimensione && y>=0 && y<dimensione)
@@ -36,14 +42,33 @@ public class Grid implements GridIF {
         return -1;
     }//getValue
 
+
+    @Override
+    public void switchColumn(int x, int y){
+        for(int i=0; i<dimensione; i++){
+            grid[i][x].switchValue(grid[i][y]);
+        }
+    }//switchColumn
+
+    @Override
+    public void switchRow(int x,int y){
+       for(int i=0; i<dimensione; i++){
+           grid[x][i].switchValue(grid[y][i]);
+       }
+    }//switchRow
+
+
+
     @Override
     public boolean getState(int x, int y) {
+        if(x>=0 && x<dimensione && y>=0 && y<dimensione)
+            return grid[x][y].getState();
         return false;
-    }
+    }//getState
 
     @Override
     public void removeValue(int x, int y) {
-
+        grid[x][y].clean();
     }
 
     @Override
@@ -88,10 +113,13 @@ public class Grid implements GridIF {
 
     @Override
     public boolean isLegal(int val, int x, int y) {
-        addValue(val, x, y);
-        boolean ret = grid[x][y].getState();
-        removeValue(x,y);
-        return ret;
+       if(x>=0 && x<dimensione && y>=0 && y<dimensione) {
+           addValue(val, x, y);
+           boolean ret = grid[x][y].getState();
+           removeValue(x, y);
+           return ret;
+       }
+       return false;
     }
 
     @Override

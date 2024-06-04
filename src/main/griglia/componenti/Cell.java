@@ -1,8 +1,9 @@
-package griglia.componenti;
+package main.griglia.componenti;
 
-import griglia.interfacce.CellIF;
-import griglia.interfacce.Constraint;
+import main.griglia.interfacce.CellIF;
+import main.griglia.interfacce.Constraint;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class Cell implements CellIF {
     public void setValue(int value) {
         this.val = value;
         LinkedList<CellIF> c = Grid.verifyRowCol(this); //mi restituisce le celle in contrasto con corrente
+        //System.out.println(c);
         for(CellIF cell : c){
             if(!(conflict.contains(cell))){
                 conflict.add(cell);
@@ -43,17 +45,33 @@ public class Cell implements CellIF {
                 cell.setRulesState(false);
             }//if
         }//for
-        for(CellIF cell : conflict){
-            if(!(c.contains(cell))){
+        Iterator<CellIF> i = conflict.iterator();
+        while(i.hasNext()){
+            CellIF cell = i.next();
+            if(!(c.contains(cell))) {
                 cell.removeInContrast(this);
                 cell.setRulesState(cell.getInContrast().isEmpty());
                 conflict.remove(cell);
-            }//if
-        }//for
+            }
+        }
+        //for(CellIF cell : conflict){
+          //if(!(c.contains(cell))){
+            //cell.removeInContrast(this);
+            //cell.setRulesState(cell.getInContrast().isEmpty());
+            //conflict.remove(cell);
+          //}//if
+        //}//for
         //System.out.println("verifico conflitti");
         this.okRowCol = Grid.verifyPositive(this) && conflict.isEmpty();
-        this.okCage = cage.verify();
+        this.okCage = true;
+        if(this.cage!=null)
+            this.okCage = cage.verify();
     }//setValue
+
+    @Override
+    public void setValueNC(int value) {
+        this.val = value;
+    }
 
     @Override
     public int getValue() {
@@ -98,6 +116,13 @@ public class Cell implements CellIF {
     public boolean hasConstraint() {
         return cage!=null;
     }//hasConstraint
+
+    @Override
+    public void switchValue(CellIF c){
+        int tmp = this.val;
+        this.val = c.getValue();
+        c.setValueNC(tmp);
+    }//switchValue
 
 
     @Override

@@ -1,5 +1,7 @@
 package main.griglia.interfacce;
 
+import main.backtracking.Backtracking;
+import main.griglia.GeneraGriglia;
 import main.griglia.Memento;
 
 public interface GridIF {
@@ -31,8 +33,8 @@ public interface GridIF {
     void switchColumn(int i, int j);
     //String constrString();
     //List<Constraint> listOfConstraint();
-    //Generator getGenerator();
-    //Backtracking getBacktracking();
+    GeneraGriglia getGenerator();
+    Backtracking getBacktracking();
     Memento createMemento();
     void setMemento(Memento memento);
 }//GridIf

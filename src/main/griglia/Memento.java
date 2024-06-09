@@ -1,19 +1,33 @@
 package main.griglia;
 
-import main.griglia.interfacce.CellIF;
+import main.griglia.componenti.Cell;
+
+import java.util.Arrays;
 
 public class Memento {
-    private CellIF[][] griglia;
+    private Cell[][] griglia;
 
-    public Memento(CellIF[][] m){
+    public Memento(Cell[][] m){
         this.griglia = m;
     }
 
-    public CellIF[][] getGriglia(){
+    public Cell[][] getGriglia(){
         return this.griglia;
     }
 
-    public void setGriglia(CellIF[][] griglia){
+    public void setGriglia(Cell[][] griglia){
         this.griglia = griglia;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < griglia.length; i++) {
+            sb.append("\n");
+            for (int j = 0; j < griglia.length; j++) {
+                sb.append(griglia[i][j].toString() + "\s");
+            }
+        }
+        return sb.toString();
     }
 }//Memento

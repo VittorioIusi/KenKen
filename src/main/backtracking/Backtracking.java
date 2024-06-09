@@ -10,7 +10,7 @@ public abstract class Backtracking<P,S> {
     protected abstract void deassegna( P ps, S s );
     protected abstract void scriviSoluzione( P p );
 
-    private P primoPuntoDiScelta() {
+    protected P primoPuntoDiScelta() {
         return ps.get(0);
     }//primoPuntoDiScelta
 
@@ -34,7 +34,7 @@ public abstract class Backtracking<P,S> {
         return false; //cerca tutte le possibili soluzioni
     }//ultimaSoluzione
 
-    private List<P> ps;
+    protected List<P> ps;
 
     //factory
     protected abstract List<P> puntiDiScelta();

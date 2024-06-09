@@ -1,20 +1,18 @@
 package main.griglia.componenti;
 
-import main.griglia.interfacce.CellIF;
-import main.griglia.interfacce.Constraint;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Cell implements CellIF {
+public class Cell {
     private int x;
     private int y;
     private int val;
-    private Constraint cage;
+    private Cage cage;
     private boolean okCage;
     private boolean okRowCol;
-    private LinkedList<CellIF> conflict;
+    private LinkedList<Cell> conflict;
 
 
 
@@ -33,21 +31,21 @@ public class Cell implements CellIF {
         this.val = c.getValue();
     }//costruttore
 
-    @Override
+
     public void setValue(int value) {
         this.val = value;
-        LinkedList<CellIF> c = Grid.verifyRowCol(this); //mi restituisce le celle in contrasto con corrente
+        LinkedList<Cell> c = Grid.verifyRowCol(this); //mi restituisce le celle in contrasto con corrente
         //System.out.println(c);
-        for(CellIF cell : c){
+        for(Cell cell : c){
             if(!(conflict.contains(cell))){
                 conflict.add(cell);
                 cell.addInContrast(this);
                 cell.setRulesState(false);
             }//if
         }//for
-        Iterator<CellIF> i = conflict.iterator();
+        Iterator<Cell> i = conflict.iterator();
         while(i.hasNext()){
-            CellIF cell = i.next();
+            Cell cell = i.next();
             if(!(c.contains(cell))) {
                 cell.removeInContrast(this);
                 cell.setRulesState(cell.getInContrast().isEmpty());
@@ -68,19 +66,19 @@ public class Cell implements CellIF {
             this.okCage = cage.verify();
     }//setValue
 
-    @Override
+
     public void setValueNC(int value) {
         this.val = value;
     }
 
-    @Override
+
     public int getValue() {
         return val;
     }//getValue
 
-    @Override
+
     public void clean() {
-        for(CellIF cell: conflict){
+        for(Cell cell: conflict){
             cell.removeInContrast(this);
             cell.setRulesState(cell.getInContrast().isEmpty());
         }
@@ -90,69 +88,69 @@ public class Cell implements CellIF {
         okRowCol = false;
     }//clean
 
-    @Override
+
     public int getX() {
         return x;
     }//getX
 
-    @Override
+
     public int getY() {
         return y;
     }//getY
 
-    @Override
-    public void setConstraint(Constraint c) {
+
+    public void setConstraint(Cage c) {
         //System.out.println("Sto aggiungendo un vncolo");
         this.cage = c;
         this.cage.addCell(this);
     }//setConstraint
 
-    @Override
-    public Constraint getConstraint() {
+
+    public Cage getConstraint() {
         return cage;
     }//getConstraint
 
-    @Override
+
     public boolean hasConstraint() {
         return cage!=null;
     }//hasConstraint
 
-    @Override
-    public void switchValue(CellIF c){
+
+    public void switchValue(Cell c){
         int tmp = this.val;
         this.val = c.getValue();
         c.setValueNC(tmp);
     }//switchValue
 
 
-    @Override
+
     public void setCageState(boolean state) {
         this.okCage = state;
     }//setCageState
 
-    @Override
+
     public void setRulesState(boolean state) {
         this.okRowCol = state;
     }//set
 
-    @Override
+
     public boolean getState() {
         return okCage && okRowCol;
     }//getState
 
 
-    @Override
-    public void removeInContrast(CellIF c) {
+
+    public void removeInContrast(Cell c) {
         conflict.remove(c);
     }//removeInContrast
 
-    @Override
-    public void addInContrast(CellIF c) {
+
+    public void addInContrast(Cell c) {
         conflict.add(c);
     }//addInConstrast
 
-    @Override
-    public List<CellIF> getInContrast() {
+
+    public List<Cell> getInContrast() {
         return conflict;
     }//getInConstrast
 

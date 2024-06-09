@@ -1,16 +1,14 @@
 package main.griglia.componenti;
-
+import main.backtracking.Risolutore;
+import main.griglia.GeneraGriglia;
 import main.griglia.Memento;
-import main.griglia.interfacce.CellIF;
-import main.griglia.interfacce.Constraint;
-import main.griglia.interfacce.GridIF;
-
 import java.util.LinkedList;
+import java.util.List;
 
-public class Grid implements GridIF {
-   private static CellIF[][] grid;
+public class Grid {
+   private static Cell[][] grid;
    private static int dimensione;
-   private static Grid INSTANCE = null;
+   private static Grid INSTANCE;
 
    private Grid() {}
 
@@ -23,19 +21,18 @@ public class Grid implements GridIF {
 
 
 
-    @Override
+
     public void addValue(int val, int x, int y) {
         if(x>=0 && x<dimensione && y>=0 && y<dimensione)
             grid[x][y].setValue(val);
     }//addValue
 
 
-    @Override
     public void addValueNC(int val, int x, int y) {
        grid[x][y].setValueNC(val);
     }
 
-    @Override
+
     public int getValue(int x, int y) {
         if(x>=0 && x<dimensione && y>=0 && y<dimensione)
             return grid[x][y].getValue();
@@ -43,14 +40,14 @@ public class Grid implements GridIF {
     }//getValue
 
 
-    @Override
+
     public void switchColumn(int x, int y){
         for(int i=0; i<dimensione; i++){
             grid[i][x].switchValue(grid[i][y]);
         }
     }//switchColumn
 
-    @Override
+
     public void switchRow(int x,int y){
        for(int i=0; i<dimensione; i++){
            grid[x][i].switchValue(grid[y][i]);
@@ -59,19 +56,19 @@ public class Grid implements GridIF {
 
 
 
-    @Override
+
     public boolean getState(int x, int y) {
         if(x>=0 && x<dimensione && y>=0 && y<dimensione)
             return grid[x][y].getState();
         return false;
     }//getState
 
-    @Override
+
     public void removeValue(int x, int y) {
         grid[x][y].clean();
     }
 
-    @Override
+
     public void clean() {
         for(int i = 0 ; i < dimensione ; i++){
             for(int j = 0 ; j < dimensione ; j++)
@@ -79,39 +76,38 @@ public class Grid implements GridIF {
         }
     }//clean
 
-    @Override
+
     public void setDimension(int size) {
         this.dimensione = size;
-        grid = new CellIF[dimensione][dimensione];
+        grid = new Cell[dimensione][dimensione];
         for(int i = 0 ; i < dimensione ; i++){
             for(int j = 0 ; j < dimensione ; j++)
                 grid[i][j] = new Cell(i,j);
         }
     }
 
-    @Override
+
     public int getDimension() {
         return dimensione;
     }
 
-    @Override
-    public void setConstraint(Constraint c, int x, int y) {
+
+    public void setConstraint(Cage c, int x, int y) {
         grid[x][y].setConstraint(c);
     }
 
-    @Override
-    public Constraint getConstraint(int x,int y) {
+
+    public Cage getConstraint(int x,int y) {
         return grid[x][y].getConstraint();
     }
 
-    @Override
-    public CellIF getCell(int x, int y) {
+
+    public Cell getCell(int x, int y) {
         if(x>=0 && x<dimensione && y>=0 && y<dimensione)
             return grid[x][y];
         return null;
     }
 
-    @Override
     public boolean isLegal(int val, int x, int y) {
        if(x>=0 && x<dimensione && y>=0 && y<dimensione) {
            addValue(val, x, y);
@@ -122,7 +118,7 @@ public class Grid implements GridIF {
        return false;
     }
 
-    @Override
+
     public boolean isCompleted() {
         for(int i=0; i<dimensione; i++){
             for(int j=0; j<dimensione; j++){
@@ -139,8 +135,8 @@ public class Grid implements GridIF {
     }//verifyPositive
 
 
-    public static LinkedList<CellIF> verifyRowCol(Cell c){
-       LinkedList<CellIF> ret = new LinkedList<>();
+    public static LinkedList<Cell> verifyRowCol(Cell c){
+       LinkedList<Cell> ret = new LinkedList<>();
         for (int i = 0; i < dimensione; i++) {
             // Controllo sulla stessa riga
             if (i != c.getY() && c.getValue() == grid[c.getX()][i].getValue()) {
@@ -154,6 +150,17 @@ public class Grid implements GridIF {
        return ret;
     }//verifyOnGrid
 
+    public List<Cage> listOfConstraint(){
+        List<Cage> list = new LinkedList<>();
+        for(int i=0; i<dimensione; i++){
+            for(int j=0; j<dimensione; j++){
+                if(!(list.contains(getConstraint(i,j))))
+                    list.add(getConstraint(i,j));
+            }
+        }
+        return list;
+    }
+
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
@@ -166,21 +173,29 @@ public class Grid implements GridIF {
         return sb.toString();
     }//toStirng
 
-    @Override
+    public GeneraGriglia getGeneratore(){
+       return GeneraGriglia.getInstance(this);
+    }
+
+    public Risolutore getRisolutore(){
+        return Risolutore.getInstance(this);
+    }
+
+
     public Memento createMemento() {
-        CellIF[][]ret = new CellIF[dimensione][dimensione];
+        Cell[][]ret = new Cell[dimensione][dimensione];
         for (int i = 0; i < dimensione; i++) {
             for (int j = 0; j <  dimensione; j++) {
-                ret[i][j] = grid[i][j];
+                ret[i][j] = new Cell(grid[i][j]);
             }
         }
         return new Memento(ret);
     }
 
-    @Override
+
     public void setMemento(Memento memento) {
         clean();
-        CellIF[][] g = memento.getGriglia();
+        Cell[][] g = memento.getGriglia();
         for (int i = 0; i < dimensione; i++) {
             for (int j = 0; j < dimensione; j++) {
                 addValue(g[i][j].getValue(),g[i][j].getX(),g[i][j].getY());

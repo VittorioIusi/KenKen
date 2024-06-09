@@ -8,21 +8,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class Cage implements Constraint {
-    private LinkedList<CellIF> cells;
+public class Cage {
+    private LinkedList<Cell> cells;
     private Operazione op;
     private int target;
 
     public Cage(){
-        cells = new LinkedList<CellIF>();
+        cells = new LinkedList<Cell>();
     }//costruttore
 
-    @Override
-    public void addCell(CellIF ec) {
+
+    public void addCell(Cell ec) {
         this.cells.add(ec);
     }//addCell
 
-    @Override
+
     public void setValues() {
         setRandomOp();
         LinkedList<Integer> val = getValue();
@@ -30,10 +30,10 @@ public class Cage implements Constraint {
     }//setValues
 
 
-    @Override
+
     public boolean verify(){
         LinkedList<Integer> val = getValue();
-        if(!arePositive(val)||(arePositive(val)&& target==op.doOp(val)))
+        if(!arePositive(val)||(arePositive(val)&& target==op.doOp(val)))//pienezza del cage, se ce ne sono =0 e parzialmente pieno
             validaCelle(true);
         else if(arePositive(val) && !(target==op.doOp(val)))
             validaCelle(false);
@@ -48,7 +48,7 @@ public class Cage implements Constraint {
     }
 
     private void validaCelle(boolean state){
-        for(CellIF cell: cells) {
+        for(Cell cell: cells) {
             cell.setCageState(state);
         }
     }
@@ -57,7 +57,7 @@ public class Cage implements Constraint {
 
     public LinkedList<Integer> getValue(){
         LinkedList<Integer> ret = new LinkedList<>();
-        for(CellIF c: cells){
+        for(Cell c: cells){
             ret.add(c.getValue());
         }
         return ret;
@@ -78,7 +78,7 @@ public class Cage implements Constraint {
     }//setRandomOp
 
 
-    public LinkedList<CellIF> getCells() {
+    public LinkedList<Cell> getCells() {
         return cells;
     }
 
@@ -102,6 +102,42 @@ public class Cage implements Constraint {
             return target+"x";
         }
         return target+"/";
+    }
+
+
+
+
+
+    public boolean isRigaUnica() {
+        int minY = Integer.MAX_VALUE;
+        int maxY = Integer.MIN_VALUE;
+
+        for (Cell cell : cells) {
+            if (cell.getY() < minY) {
+                minY = cell.getY();
+            }
+            if (cell.getY() > maxY) {
+                maxY = cell.getY();
+            }
+        }
+
+        return minY == maxY;
+    }
+
+    public boolean isColonnaUnica() {
+        int minX = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+
+        for (Cell cell : cells) {
+            if (cell.getX() < minX) {
+                minX = cell.getX();
+            }
+            if (cell.getX() > maxX) {
+                maxX = cell.getX();
+            }
+        }
+
+        return minX == maxX;
     }
 
 }

@@ -1,58 +1,75 @@
 package main.griglia;
 
 import main.griglia.componenti.Cage;
+import main.griglia.componenti.Cell;
 import main.griglia.componenti.Grid;
-import main.griglia.interfacce.CellIF;
-import main.griglia.interfacce.GridIF;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
 
 
 public class GeneraGriglia {
-    private static GridIF gg;
+    private static GeneraGriglia INSTANCE = null;
+    private static Grid gg;
+    private Map<Cage,LinkedList<Cell>> cageCell = new HashMap<>();
 
-    public GeneraGriglia(GridIF g){
+    private GeneraGriglia(Grid g){
         this.gg = g;
+    }
+
+    public static synchronized GeneraGriglia getInstance(Grid g){
+        if(INSTANCE == null){
+            INSTANCE = new GeneraGriglia(g);
+        }
+        return INSTANCE;
     }
 
 
     public void genera(){
+        System.out.println("Generando...");
         riempiGriglia();
         shuffleGriglia();
         //System.out.println("griglia shufflata"+gg);
         while(true){
-            CellIF c = trovaCella();
+            Cell c = trovaCella();
             //System.out.println("inizio partendo dalla cella: "+c);
             if(c == null)
                 break;
             Cage cage = new Cage();
+            LinkedList<Cell> celle = new LinkedList<>();
+            celle.add(c);
             gg.setConstraint(cage,c.getX(),c.getY());
             int dim = randomSize();
             //System.out.println("dimensione:"+dim);
             for(int i=0; i<dim; i++){
-                CellIF nextCell = trovaVicino(c);
+                Cell nextCell = trovaVicino(c);
                 if(nextCell == null) {
                     //System.out.println("trova vicino ha restituito null");
                     break;
                 }
+                celle.add(nextCell);
                 gg.setConstraint(cage,nextCell.getX(),nextCell.getY());
             }
+            cageCell.put(cage,celle);
             cage.setValues();
 
         }//while
+        //System.out.println(gg);
         gg.clean();
 
     }//genera
 
-    private CellIF trovaVicino(CellIF c) {
-        CellIF ret = null;
+
+    private Cell trovaVicino(Cell c) {
+        Cell ret = null;
         LinkedList<Esplorazione> espl = getEspl();
-        LinkedList<CellIF> vicini = ((Cage)c.getConstraint()).getCells();
+        LinkedList<Cell> vicini = ((Cage)c.getConstraint()).getCells();
         //System.out.println("ecco i vicini"+vicini);
-        for(CellIF cell: vicini){
+        for(Cell cell: vicini){
             for (Esplorazione e : espl) {
-                CellIF vicino = e.esplora(cell);
+                Cell vicino = e.esplora(cell);
                 if (vicino != null) {
                     //System.out.println("ho trovato un vicino");
                     ret = vicino;
@@ -69,7 +86,10 @@ public class GeneraGriglia {
 
 
 
-    private void riempiGriglia() {
+
+
+
+        private void riempiGriglia() {
         for(int i=0; i<gg.getDimension(); i++){
             for(int j=0; j<gg.getDimension(); j++) {
                 //System.out.println("Sto riempendo");
@@ -90,7 +110,7 @@ public class GeneraGriglia {
         }
     }//shuffleGriglia
 
-    private CellIF trovaCella(){
+    private Cell trovaCella(){
         for(int i=0; i< gg.getDimension(); i++){
             for(int j=0; j< gg.getDimension(); j++){
                 if(!gg.getCell(i,j).hasConstraint()){
@@ -117,10 +137,13 @@ public class GeneraGriglia {
         return espl;
     }
 
+    public Map<Cage, LinkedList<Cell>> getCageCell() {
+        return cageCell;
+    }
 
     private enum Esplorazione {
         SOPRA{
-            public CellIF esplora(CellIF c){
+            public Cell esplora(Cell c){
                 //System.out.println("entro");
                 int x = c.getX()-1;
                 if(x>=0 && !(gg.getCell(x,c.getY()).hasConstraint())){
@@ -131,7 +154,7 @@ public class GeneraGriglia {
             }
         },
         SOTTO{
-            public CellIF esplora(CellIF c){
+            public Cell esplora(Cell c){
                 int x = c.getX()+1;
                 if(x<gg.getDimension() && !(gg.getCell(x,c.getY()).hasConstraint())){
                     //System.out.println("Trovato sotto");
@@ -141,7 +164,7 @@ public class GeneraGriglia {
             }
         },
         DESTRA{
-            public CellIF esplora(CellIF c){
+            public Cell esplora(Cell c){
                 int y = c.getY()+1;
                 if(y<gg.getDimension() && !(gg.getCell(c.getX(),y).hasConstraint())){
                     //System.out.println("Trovato destra");
@@ -151,7 +174,7 @@ public class GeneraGriglia {
             }
         },
         SINISTRA{
-            public CellIF esplora(CellIF c){
+            public Cell esplora(Cell c){
                 int y = c.getX()-1;
                 if(y>=0 && !(gg.getCell(c.getX(),y).hasConstraint())){
                     //System.out.println("Trovato sinistra");
@@ -160,7 +183,7 @@ public class GeneraGriglia {
                 return null;
             }
         };
-        public abstract CellIF esplora(CellIF c);
+        public abstract Cell esplora(Cell c);
     }//Esplorazione
 
 

@@ -1,6 +1,7 @@
 package main.grafica.command;
 
 import main.grafica.mediator.ConcreteMediator;
+import main.grafica.mediator.Mediator;
 import main.grafica.pannelli.FinestraGioco;
 import main.griglia.componenti.Grid;
 
@@ -26,6 +27,10 @@ public class ConfermaImpostazioniCommand implements Command {
         m.setFinestraGioco(finestraGioco);
         m.getFinestraSetting().getFrame().setVisible(false);
         m.getFinestraGioco().getFrame().setVisible(true);
+        m.getFinestraGioco().getRiprendiButton().setEnabled(false);
+        m.getFinestraGioco().getNextButton().setEnabled(false);
+        m.getFinestraGioco().getPrevButton().setEnabled(false);
+        m.getFinestraGioco().getRiprendiButton().setEnabled(false);
         finestraGioco.setMediator(m);
     }
 }

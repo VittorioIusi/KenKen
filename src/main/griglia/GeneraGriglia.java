@@ -4,10 +4,7 @@ import main.griglia.componenti.Cage;
 import main.griglia.componenti.Cell;
 import main.griglia.componenti.Grid;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 
 public class GeneraGriglia {
@@ -63,24 +60,15 @@ public class GeneraGriglia {
 
 
     private Cell trovaVicino(Cell c) {
-        Cell ret = null;
-        LinkedList<Esplorazione> espl = getEspl();
-        LinkedList<Cell> vicini = ((Cage)c.getConstraint()).getCells();
-        //System.out.println("ecco i vicini"+vicini);
-        for(Cell cell: vicini){
-            for (Esplorazione e : espl) {
-                Cell vicino = e.esplora(cell);
-                if (vicino != null) {
-                    //System.out.println("ho trovato un vicino");
-                    ret = vicino;
-                    break;
-                }
-            }
-            if (ret != null) {
-                return ret;
+        List<Esplorazione> espl = getEspl();
+        Collections.shuffle(espl); // Mescola le direzioni di esplorazione
+        for (Esplorazione e : espl) {
+            Cell vicino = e.esplora(c);
+            if (vicino != null) {
+                return vicino;
             }
         }
-        return ret;
+        return null;
     }//trovaVicino
 
 

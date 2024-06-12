@@ -1,7 +1,6 @@
 package main.grafica.mediator;
 
-import main.grafica.command.ConfermaImpostazioniCommand;
-import main.grafica.command.NuovaPartitaCommand;
+import main.grafica.command.*;
 import main.grafica.pannelli.FinestraGioco;
 import main.grafica.pannelli.FinestraIniziale;
 import main.grafica.pannelli.FinestraSetting;
@@ -38,7 +37,22 @@ public class ConcreteMediator implements Mediator {
                 break;
             case "ConfermaImpostazioni":
                 new ConfermaImpostazioniCommand(this).execute();
-
+                break;
+            case "Risolvi":
+                new RisolviKenKenCommand(this).execute();
+                break;
+            case "Riprendi":
+                new RiprendiPartitaCommand(this).execute();
+                break;
+            case "NextSol":
+                new IteraSoluzioniCommand(this,"Next").execute();
+                break;
+            case "PrevSol":
+                new IteraSoluzioniCommand(this,"Prev").execute();
+                break;
+            case "ControllaVincoli":
+                new ControllaVincoliCommand(this).execute();
+                break;
         }
 
     }//notify

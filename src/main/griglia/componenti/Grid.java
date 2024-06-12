@@ -20,6 +20,15 @@ public class Grid {
    }//getInstance
 
 
+    public Cell[][] getTable(){
+        Cell[][] ret = new Cell[dimensione][dimensione];
+        for(int i=0; i<dimensione; i++){
+            for(int j=0; j<dimensione; j++)
+                ret[i][j] = new Cell(grid[i][j]);
+        }
+        return ret;
+    }
+
 
 
     public void addValue(int val, int x, int y) {
@@ -70,6 +79,7 @@ public class Grid {
 
 
     public void clean() {
+       System.out.println("clean");
         for(int i = 0 ; i < dimensione ; i++){
             for(int j = 0 ; j < dimensione ; j++)
                 grid[i][j].clean();
@@ -184,11 +194,13 @@ public class Grid {
 
     public Memento createMemento() {
         Cell[][]ret = new Cell[dimensione][dimensione];
+        System.out.println("sto creando un memento da aggiungere alla lista");
         for (int i = 0; i < dimensione; i++) {
             for (int j = 0; j <  dimensione; j++) {
                 ret[i][j] = new Cell(grid[i][j]);
             }
         }
+        //System.out.println(ret);
         return new Memento(ret);
     }
 

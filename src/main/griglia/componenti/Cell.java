@@ -33,6 +33,7 @@ public class Cell {
 
 
     public void setValue(int value) {
+        //System.out.println("ho settato per il back la cella"+x+y+"con val :"+value);
         this.val = value;
         LinkedList<Cell> c = Grid.verifyRowCol(this); //mi restituisce le celle in contrasto con corrente
         //System.out.println(c);
@@ -43,15 +44,24 @@ public class Cell {
                 cell.setRulesState(false);
             }//if
         }//for
-        Iterator<Cell> i = conflict.iterator();
-        while(i.hasNext()){
-            Cell cell = i.next();
-            if(!(c.contains(cell))) {
-                cell.removeInContrast(this);
+        LinkedList<Cell> dE = new LinkedList<>();
+        for(Cell cell: conflict){
+            if(!(c.contains(cell))){
+                dE.add(cell);
                 cell.setRulesState(cell.getInContrast().isEmpty());
-                conflict.remove(cell);
+                cell.removeInContrast(this);
             }
         }
+        conflict.removeAll(dE);
+        //Iterator<Cell> i = conflict.iterator();
+        //while(i.hasNext()){
+        //    Cell cell = i.next();
+            //if(!(c.contains(cell))) {
+                //cell.removeInContrast(this);
+                //cell.setRulesState(cell.getInContrast().isEmpty());
+                //conflict.remove(cell);
+            //}
+        //}
         //for(CellIF cell : conflict){
           //if(!(c.contains(cell))){
             //cell.removeInContrast(this);

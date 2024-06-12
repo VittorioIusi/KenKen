@@ -14,15 +14,19 @@ public class Risolutore extends Backtracking<Cell,Integer> {
     private static Grid gg;
     private int numSol = 0;
     private int maxSol;
-    private LinkedList<Memento> soluzioni;
-    private ListIterator<Memento> lit;
+    //private LinkedList<Memento> soluzioni;
+    private LinkedList<Cell[][]> sol;     //PROVA
+    //private ListIterator<Memento> lit;
+    private ListIterator<Cell[][]> lit2;    //PROVA
 
 
     private Risolutore(Grid gg) {
-        maxSol=4;
+        maxSol=1;
         this.gg = gg;
-        soluzioni = new LinkedList<>();
-        lit = soluzioni.listIterator();
+        //soluzioni = new LinkedList<>();
+        sol = new LinkedList<>(); //PROVA
+        //lit = soluzioni.listIterator();
+        lit2 = sol.listIterator();  //PROVA
     }
 
     public static synchronized Risolutore getInstance(Grid gg){
@@ -60,8 +64,9 @@ public class Risolutore extends Backtracking<Cell,Integer> {
     protected boolean esisteSoluzione(Cell cell) {
         if(gg.isCompleted()){
             numSol++;
-            Memento m = gg.createMemento();//creo un menmento con la soluzione corrente
-            soluzioni.add(m);
+            //Memento m = gg.createMemento();//creo un menmento con la soluzione corrente
+            sol.add(gg.getTable());
+            //soluzioni.add(m);
             return true;
         }
         return false;
@@ -97,29 +102,36 @@ public class Risolutore extends Backtracking<Cell,Integer> {
 
     @Override
     public void risolvi(){
-        soluzioni= new LinkedList<>();
+        sol= new LinkedList<>();
         numSol=0;
         gg.clean();
         ps=puntiDiScelta();
         tentativo( primoPuntoDiScelta() );
-        lit=soluzioni.listIterator();
+        lit2=sol.listIterator();
     }//risolvi
+
+
+
+    public LinkedList<Cell[][]> getSol(){
+        System.out.println("ho restituito la lista delle soluzioni");
+        return sol;
+    }
 
 
     public void setMaxSol(int maxSol) {
         this.maxSol = maxSol;
     }
 
-    public Memento nextSol(){
-        if(lit.hasNext()){
-            return lit.next();
+    public Cell[][] nextSol(){
+        if(lit2.hasNext()){
+            return lit2.next();
         }
         return null;
     }//nextSol
 
-    public Memento prevSol(){
-        if(lit.hasPrevious()){
-            return lit.previous();
+    public Cell[][] prevSol(){
+        if(lit2.hasPrevious()){
+            return lit2.previous();
         }
         return null;
     }//prevSol

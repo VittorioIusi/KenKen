@@ -82,4 +82,7 @@ public class FinestraSetting extends JFrame implements ActionListener {
                 }
         }
     }
+
+
+
 }

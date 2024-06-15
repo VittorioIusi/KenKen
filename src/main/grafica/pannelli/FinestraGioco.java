@@ -27,6 +27,10 @@ public class FinestraGioco extends JFrame implements ActionListener {
     private JButton riprendiButton;
     private JButton prevButton;
     private JButton nextButton;
+
+    private JMenuItem salvaPartitaMenuItem;
+
+
     private Grid g;
     private Memento memento;
 
@@ -42,6 +46,27 @@ public class FinestraGioco extends JFrame implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 600); // Imposta la dimensione in base alla dimensione della griglia
         frame.setLayout(new BorderLayout());
+        frame.setLocationRelativeTo(null);  // Centra la finestra sullo schermo
+
+
+        // Aggiungi la barra dei menu
+        JMenuBar menuBar = new JMenuBar();
+
+        // Menu "File"
+        JMenu menuFile = new JMenu("File");
+        salvaPartitaMenuItem = new JMenuItem("Salva Partita");
+        salvaPartitaMenuItem.addActionListener(this);
+        menuFile.add(salvaPartitaMenuItem);
+        menuBar.add(menuFile);
+
+        // Menu "Help"
+        JMenu menuHelp = new JMenu("Help");
+        JMenuItem regoleMenuItem = new JMenuItem("Regole");
+        regoleMenuItem.addActionListener(e -> mostraRegole());//tanto non cambia
+        menuHelp.add(regoleMenuItem);
+        menuBar.add(menuHelp);
+
+        frame.setJMenuBar(menuBar);
 
         // Inizializza la griglia delle celle
         JPanel gridPanel = new JPanel();
@@ -170,7 +195,25 @@ public class FinestraGioco extends JFrame implements ActionListener {
         else if(e.getSource()==prevButton){
             mediator.notify("PrevSol");
         }
+        else if(e.getSource()==salvaPartitaMenuItem){
+            mediator.notify("Salva");
+        }
     }
+
+
+
+    private void mostraRegole() {
+        String regole = "KenKen è un gioco di logica con le seguenti regole:\n\n" +
+                "1. Riempire la griglia con numeri da 1 a N (dove N è la dimensione della griglia).\n" +
+                "2. Ogni numero deve apparire una sola volta per riga e per colonna.\n" +
+                "3. La griglia è suddivisa in 'cages', ciascuno con un obiettivo aritmetico.\n" +
+                "4. Raggiungere l'obiettivo aritmetico utilizzando i numeri all'interno della gabbia.\n" +
+                "   - Operazioni possibili: addizione, sottrazione, moltiplicazione, divisione.\n" +
+                "5. Esempio: se una gabbia ha l'obiettivo 6+, i numeri devono sommarsi a 6.\n\n" +
+                "Il gioco è risolto quando tutti i numeri sono inseriti rispettando le regole di unicità per riga e colonna " +
+                "e soddisfacendo gli obiettivi aritmetici di tutte le gabbie.";
+        JOptionPane.showMessageDialog(frame, regole, "Regole di KenKen", JOptionPane.INFORMATION_MESSAGE);
+    }//mostraRegole
 
 
 

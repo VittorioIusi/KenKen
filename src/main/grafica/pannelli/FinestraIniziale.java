@@ -28,6 +28,7 @@ public class FinestraIniziale extends JPanel implements ActionListener {
         frame.setSize(400, 400);  // Imposta la dimensione della finestra
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Chiudi l'applicazione quando la finestra viene chiusa
         frame.setLocationRelativeTo(null);  // Centra la finestra sullo schermo
+        frame.setResizable(false);  // Impedisce il ridimensionamento della finestra
 
         JPanel panel = new JPanel();  // Crea il JPanel
         frame.getContentPane().add(panel);  // Aggiungi il pannello al contenitore principale della finestra
@@ -36,12 +37,12 @@ public class FinestraIniziale extends JPanel implements ActionListener {
 
         // Inizializza e posiziona il pulsante "Nuova Partita"
         nuovaPartitaButton = new JButton("Nuova Partita");
-        nuovaPartitaButton.setBounds(50, 50, 200, 30);
+        nuovaPartitaButton.setBounds(100, 115, 200, 30);
         nuovaPartitaButton.addActionListener(this);
 
         // Inizializza e posiziona il pulsante "Carica Partita"
         caricaPartitaButton = new JButton("Carica Partita");
-        caricaPartitaButton.setBounds(50, 100, 200, 30);
+        caricaPartitaButton.setBounds(100, 175, 200, 30);
         caricaPartitaButton.addActionListener(this);
 
         // Aggiungi i pulsanti al pannello
@@ -59,7 +60,7 @@ public class FinestraIniziale extends JPanel implements ActionListener {
             mediator.notify("NuovaPartita");
         }
         else if(e.getSource() == caricaPartitaButton) {
-            mediator.notify("Carica Partita");
+            mediator.notify("CaricaPartita");
         }
     }
 

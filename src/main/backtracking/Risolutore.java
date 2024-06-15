@@ -122,6 +122,10 @@ public class Risolutore extends Backtracking<Cell,Integer> {
         this.maxSol = maxSol;
     }
 
+    public int getMaxSol(){
+        return maxSol;
+    }
+
     public Cell[][] nextSol(){
         if(lit2.hasNext()){
             return lit2.next();

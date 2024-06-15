@@ -1,8 +1,6 @@
 package main.griglia.componenti;
 
 import main.griglia.Operazione;
-import main.griglia.interfacce.CellIF;
-import main.griglia.interfacce.Constraint;
 
 import java.util.LinkedList;
 import java.util.List;

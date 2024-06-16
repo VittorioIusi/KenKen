@@ -3,6 +3,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+
+/**
+ *
+ * Utilizzo del design pattern template method per sfruttare l'algoritmo del backtracking
+ * @param <P>
+ * @param <S>
+ */
 public abstract class Backtracking<P,S> {
 
     protected abstract boolean assegnabile( P p, S s );

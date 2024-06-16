@@ -14,18 +14,14 @@ public class Risolutore extends Backtracking<Cell,Integer> {
     private static Grid gg;
     private int numSol = 0;
     private int maxSol;
-    //private LinkedList<Memento> soluzioni;
     private LinkedList<Cell[][]> sol;     //PROVA
-    //private ListIterator<Memento> lit;
     private ListIterator<Cell[][]> lit2;    //PROVA
 
 
     private Risolutore(Grid gg) {
-        maxSol=1;
+        maxSol=3;
         this.gg = gg;
-        //soluzioni = new LinkedList<>();
         sol = new LinkedList<>(); //PROVA
-        //lit = soluzioni.listIterator();
         lit2 = sol.listIterator();  //PROVA
     }
 
@@ -56,26 +52,27 @@ public class Risolutore extends Backtracking<Cell,Integer> {
 
     @Override
     protected void scriviSoluzione(Cell cell) {
-        System.out.println("AAA: ecco una soluzione");
-        System.out.println(gg);
+        //System.out.println("AAA: ecco una soluzione");
+        //System.out.println(gg);
     }
 
     @Override
     protected boolean esisteSoluzione(Cell cell) {
         if(gg.isCompleted()){
             numSol++;
-            //Memento m = gg.createMemento();//creo un menmento con la soluzione corrente
             sol.add(gg.getTable());
-            //soluzioni.add(m);
+            //System.out.println("Soluzione trovata: " + numSol);
             return true;
         }
         return false;
     }
 
+
     @Override
     protected boolean ultimaSoluzione(Cell cell) {
         return numSol==maxSol;
     }
+
 
     @Override
     protected List<Cell> puntiDiScelta() {
@@ -92,8 +89,8 @@ public class Risolutore extends Backtracking<Cell,Integer> {
     protected Collection<Integer> scelte(Cell cell) {
         LinkedList<Integer> ret = new LinkedList<>();
         for(int i=1; i<=gg.getDimension();i++){
-            gg.isLegal(i, cell.getX(), cell.getY());
-            ret.add(i);
+            //if(gg.isLegal(i, cell.getX(), cell.getY()))
+                ret.add(i);
         }
         //System.out.println("Scelte per cella (" + cell.getX() + "," + cell.getY() + "): " + ret);
         return ret;
@@ -113,12 +110,13 @@ public class Risolutore extends Backtracking<Cell,Integer> {
 
 
     public LinkedList<Cell[][]> getSol(){
-        System.out.println("ho restituito la lista delle soluzioni");
+        //System.out.println("ho restituito la lista delle soluzioni: "+sol.size());
         return sol;
     }
 
 
     public void setMaxSol(int maxSol) {
+        //System.out.println("mi hanno settato");
         this.maxSol = maxSol;
     }
 

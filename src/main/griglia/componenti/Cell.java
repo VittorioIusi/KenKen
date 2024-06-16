@@ -53,23 +53,8 @@ public class Cell {
             }
         }
         conflict.removeAll(dE);
-        //Iterator<Cell> i = conflict.iterator();
-        //while(i.hasNext()){
-        //    Cell cell = i.next();
-            //if(!(c.contains(cell))) {
-                //cell.removeInContrast(this);
-                //cell.setRulesState(cell.getInContrast().isEmpty());
-                //conflict.remove(cell);
-            //}
-        //}
-        //for(CellIF cell : conflict){
-          //if(!(c.contains(cell))){
-            //cell.removeInContrast(this);
-            //cell.setRulesState(cell.getInContrast().isEmpty());
-            //conflict.remove(cell);
-          //}//if
-        //}//for
-        //System.out.println("verifico conflitti");
+        if(!Grid.verifyPositive(this))
+            this.val = 0;
         this.okRowCol = Grid.verifyPositive(this) && conflict.isEmpty();
         this.okCage = true;
         if(this.cage!=null)

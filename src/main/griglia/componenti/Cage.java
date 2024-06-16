@@ -43,13 +43,13 @@ public class Cage {
             if(i<1) return false;
         }
         return true;
-    }
+    }//arePositive
 
     private void validaCelle(boolean state){
         for(Cell cell: cells) {
             cell.setCageState(state);
         }
-    }
+    }//validaCelle
 
 
 
@@ -100,42 +100,7 @@ public class Cage {
             return target+"x";
         }
         return target+"/";
-    }
+    }//toString
 
 
-
-
-
-    public boolean isRigaUnica() {
-        int minY = Integer.MAX_VALUE;
-        int maxY = Integer.MIN_VALUE;
-
-        for (Cell cell : cells) {
-            if (cell.getY() < minY) {
-                minY = cell.getY();
-            }
-            if (cell.getY() > maxY) {
-                maxY = cell.getY();
-            }
-        }
-
-        return minY == maxY;
-    }
-
-    public boolean isColonnaUnica() {
-        int minX = Integer.MAX_VALUE;
-        int maxX = Integer.MIN_VALUE;
-
-        for (Cell cell : cells) {
-            if (cell.getX() < minX) {
-                minX = cell.getX();
-            }
-            if (cell.getX() > maxX) {
-                maxX = cell.getX();
-            }
-        }
-
-        return minX == maxX;
-    }
-
-}
+}//Cage

@@ -56,8 +56,6 @@ public enum Operazione implements Operable {
 
     };
 
-    //public static Operaation getRandomOp(List<Operation> notIcluded
-    //private sttaic List<Operation> avaibleOperations(List<Operation> notIncluded
 
 
 }

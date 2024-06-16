@@ -26,13 +26,14 @@ public class ConcreteMediator implements Mediator {
 
     private ConcreteMediator(FinestraIniziale f) {
         this.finestraIniziale = f;
-    }
+    }//costruttore
+
 
     public static synchronized ConcreteMediator getConcreteMediator(FinestraIniziale f){
         if(INSTANCE==null)
             INSTANCE=new ConcreteMediator(f);
         return INSTANCE;
-    }
+    }//getConcreteMEdiator
 
 
     @Override
@@ -41,47 +42,39 @@ public class ConcreteMediator implements Mediator {
             case "NuovaPartita":
                 System.out.println("controllore nuova partita");
                 nuovaPartita();
-                //new NuovaPartitaCommand(this).execute();
                 break;
             case "CaricaPartita":
                 System.out.println("controllore carica partita");
                 caricaPartita();
-                // Logica per caricare una partita
                 break;
             case "ConfermaImpostazioni":
                 System.out.println("controllore conferma impostazioni");
                 confermaImpostazioni();
-                //new ConfermaImpostazioniCommand(this).execute();
                 break;
             case "Risolvi":
                 System.out.println("controllore risolvi");
                 risolvi();
-                //new RisolviKenKenCommand(this).execute();
                 break;
             case "Riprendi":
                 System.out.println("controllore riprendi");
                 riprendi();
-                //new RiprendiPartitaCommand(this).execute();
                 break;
             case "NextSol":
                 System.out.println("controllore nextSol");
                 nextSol();
-                //new IteraSoluzioniCommand(this,"Next").execute();
                 break;
             case "PrevSol":
                 System.out.println("controllore prevSol");
                 prevSol();
-                //new IteraSoluzioniCommand(this,"Prev").execute();
                 break;
             case "ControllaVincoli":
                 System.out.println("controllore controllaVincoli");
                 controllaVincoli();
-                //new ControllaVincoliCommand(this).execute();
                 break;
             case "Salva":
                 System.out.println("controllore salva");
                 salva();
-        }
+        }//switch
 
     }//notify
 
@@ -91,9 +84,11 @@ public class ConcreteMediator implements Mediator {
         FinestraSetting f = new FinestraSetting();
         finestraSetting = f;
         finestraSetting.getFrame().setVisible(true);
-        finestraIniziale.getFrame().setVisible(false);
+        //finestraIniziale.getFrame().setVisible(false);
+        finestraIniziale.getFrame().dispose();//elimino la finestra invece di nasconderla
         finestraSetting.setMediator(this);
     }//nuovaPartita
+
 
     public void caricaPartita(){
         JFileChooser fileChooser = new JFileChooser();
@@ -126,7 +121,8 @@ public class ConcreteMediator implements Mediator {
                 // Mostra la finestra di gioco e aggiorna i valori sulla griglia
                 FinestraGioco fG = new FinestraGioco();
                 finestraGioco = fG;
-                finestraIniziale.getFrame().setVisible(false);
+                //finestraIniziale.getFrame().setVisible(false);
+                finestraIniziale.getFrame().dispose();
                 finestraGioco.getFrame().setVisible(true);
                 finestraGioco.getRiprendiButton().setEnabled(false);
                 finestraGioco.getNextButton().setEnabled(false);
@@ -143,6 +139,7 @@ public class ConcreteMediator implements Mediator {
         }
     }//caricaPartita
 
+
     public void confermaImpostazioni(){
         Grid g = Grid.getInstance();
         int dim = Integer.parseInt(finestraSetting.getDimensioneGrigliaText().getText());
@@ -154,7 +151,8 @@ public class ConcreteMediator implements Mediator {
         g.getRisolutore().setMaxSol(sol);
         FinestraGioco fG = new FinestraGioco();
         finestraGioco = fG;
-        finestraSetting.getFrame().setVisible(false);
+        //finestraSetting.getFrame().setVisible(false);
+        finestraSetting.getFrame().dispose();
         finestraGioco.getFrame().setVisible(true);
         finestraGioco.getRiprendiButton().setEnabled(false);
         finestraGioco.getNextButton().setEnabled(false);
@@ -166,7 +164,6 @@ public class ConcreteMediator implements Mediator {
 
     public void risolvi(){
         Risolutore risolutore = Risolutore.getInstance(Grid.getInstance());
-        //Memento mem = Grid.getInstance().createMemento();
         risolutore.risolvi();
         finestraGioco.getNextButton().setEnabled(true);
         finestraGioco.getPrevButton().setEnabled(true);
@@ -183,6 +180,7 @@ public class ConcreteMediator implements Mediator {
         finestraGioco.getPrevButton().setEnabled(false);
         finestraGioco.getNextButton().setEnabled(false);
     }//riprendi
+
 
     public void nextSol(){
         Grid g = Grid.getInstance();
@@ -218,6 +216,12 @@ public class ConcreteMediator implements Mediator {
     public void controllaVincoli(){
         JTextField[][] text = finestraGioco.getCelle();
         Grid g = Grid.getInstance();
+        if(g.isCompleted()){
+            finestraGioco.getControllaVincoliButton().setBackground(Color.GREEN);
+        }
+        else{
+            finestraGioco.getControllaVincoliButton().setBackground(Color.RED);
+        }
         for(int i=0;i<g.getDimension();i++){
             for(int j=0;j< g.getDimension();j++){
                 List<Cell> contrast = g.getCell(i,j).getInContrast();
@@ -266,8 +270,6 @@ public class ConcreteMediator implements Mediator {
     }//salva
 
 
-
-
     private void aggiornaValori() {
         JTextField[][] c = finestraGioco.getCelle();
         Cell[][] g = Risolutore.getInstance(Grid.getInstance()).getSol().get(0);
@@ -283,6 +285,7 @@ public class ConcreteMediator implements Mediator {
             }
         }
     }//aggiornaValori
+
 
     private void aggiornaValoriRiprendi() {
         JTextField[][] c = finestraGioco.getCelle();
@@ -318,32 +321,4 @@ public class ConcreteMediator implements Mediator {
 
 
 
-    public FinestraIniziale getFinestraIniziale() {
-        return finestraIniziale;
-    }
-
-
-    public FinestraSetting getFinestraSetting() {
-        return finestraSetting;
-    }
-
-
-    public FinestraGioco getFinestraGioco() {
-        return finestraGioco;
-    }
-
-
-    public void setFinestraIniziale(FinestraIniziale finestraIniziale) {
-        this.finestraIniziale = finestraIniziale;
-    }
-
-
-    public void setFinestraSetting(FinestraSetting finestraSetting) {
-        this.finestraSetting = finestraSetting;
-    }
-
-
-    public void setFinestraGioco(FinestraGioco finestraGioco) {
-        this.finestraGioco = finestraGioco;
-    }
 }//ConcreteMediator

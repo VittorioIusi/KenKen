@@ -1,20 +1,19 @@
 package main.grafica.mediator;
 
 import main.backtracking.Risolutore;
+import main.grafica.PartitaSerializzata;
 import main.grafica.pannelli.FinestraGioco;
 import main.grafica.pannelli.FinestraIniziale;
 import main.grafica.pannelli.FinestraSetting;
+import main.griglia.componenti.Cage;
 import main.griglia.componenti.Cell;
 import main.griglia.componenti.Grid;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 
 public class ConcreteMediator implements Mediator {
     private static ConcreteMediator INSTANCE;
@@ -91,53 +90,54 @@ public class ConcreteMediator implements Mediator {
 
 
     public void caricaPartita(){
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Carica Partita");
-
-        int userSelection = fileChooser.showOpenDialog(finestraIniziale.getFrame());
-
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
-
-            try (Scanner scanner = new Scanner(new File(filePath))) {
-                // Leggi la dimensione della griglia e il numero di soluzioni
-                int dimension = scanner.nextInt();
-                int numSol = scanner.nextInt();
-
-                // Imposta la dimensione della griglia e il numero di soluzioni
-                Grid g = Grid.getInstance();
-                g.setDimension(dimension);
-                g.getGeneratore().genera();
-                g.getRisolutore().setMaxSol(numSol);
-
-                // Leggi la griglia di gioco
-                for (int i = 0; i < dimension; i++) {
-                    for (int j = 0; j < dimension; j++) {
-                        int value = scanner.nextInt();
-                        g.addValue(value, i, j);
-                    }
-                }
-
-                // Mostra la finestra di gioco e aggiorna i valori sulla griglia
-                FinestraGioco fG = new FinestraGioco();
-                finestraGioco = fG;
-                //finestraIniziale.getFrame().setVisible(false);
-                finestraIniziale.getFrame().dispose();
-                finestraGioco.getFrame().setVisible(true);
-                finestraGioco.getRiprendiButton().setEnabled(false);
-                finestraGioco.getNextButton().setEnabled(false);
-                finestraGioco.getPrevButton().setEnabled(false);
-                finestraGioco.getRiprendiButton().setEnabled(false);
-                finestraGioco.setMediator(this);
-                aggiornaValoriRiprendi();
-
-                JOptionPane.showMessageDialog(finestraGioco.getFrame(), "Partita caricata correttamente da " + filePath);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(finestraIniziale.getFrame(), "Errore durante il caricamento della partita", "Errore", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
-            }
+        Grid g = Grid.getInstance();
+        String nomeFile = null;
+        String absolutePath = null;
+        JFileChooser jfc = new JFileChooser();
+        int val = jfc.showOpenDialog(null);
+        if(val==JFileChooser.APPROVE_OPTION) {
+            absolutePath = jfc.getSelectedFile().getAbsolutePath();
+            nomeFile = jfc.getSelectedFile().getName();
+            JOptionPane.showMessageDialog(null,"Carica partita da: "+nomeFile);
         }
+        try {
+            PartitaSerializzata read = null;
+            ObjectInputStream oos = new ObjectInputStream(new FileInputStream(absolutePath));
+            while(true) {
+                try {
+                    read = (PartitaSerializzata) oos.readObject();
+                    System.out.println("letto file");
+                    System.out.println(read.getDim());
+                    g.setDimension(read.getDim());
+                    g.cambiaRiferimento(read.getGrid());
+                    System.out.println(g);
+                }catch(EOFException e1){
+                    break;
+                }
+            }
+            oos.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        } catch (ClassNotFoundException e2) {
+            e2.printStackTrace();
+        } catch (ClassCastException e3) {
+            e3.printStackTrace();
+        }
+        // Mostra la finestra di gioco e aggiorna i valori sulla griglia
+        FinestraGioco fG = new FinestraGioco();
+        finestraGioco = fG;
+        colora();
+        //finestraIniziale.getFrame().setVisible(false);
+        finestraIniziale.getFrame().dispose();
+        finestraGioco.getFrame().setVisible(true);
+        finestraGioco.getRiprendiButton().setEnabled(false);
+        finestraGioco.getNextButton().setEnabled(false);
+        finestraGioco.getPrevButton().setEnabled(false);
+        finestraGioco.getRiprendiButton().setEnabled(false);
+        finestraGioco.setMediator(this);
+        aggiornaValoriRiprendi();
     }//caricaPartita
+
 
 
     public void confermaImpostazioni(){
@@ -236,36 +236,26 @@ public class ConcreteMediator implements Mediator {
     }//controllaVincoli
 
 
+
     public void salva(){
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Salva Partita");
-
-        int userSelection = fileChooser.showSaveDialog(finestraGioco.getFrame());
-
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
-
-            if (!filePath.toLowerCase().endsWith(".txt")) {
-                filePath += ".txt";
-            }
-
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-                // Salva i dati della partita
-                writer.write(Grid.getInstance().getDimension() + "\n");
-                writer.write(Risolutore.getInstance(Grid.getInstance()).getMaxSol() + "\n");
-                // Scrivi la griglia
-                for (int i = 0; i < Grid.getInstance().getDimension(); i++) {
-                    for (int j = 0; j < Grid.getInstance().getDimension(); j++) {
-                        writer.write(Grid.getInstance().getValue(i, j) + " ");
-                    }
-                    writer.write("\n");
-                }
-
-                JOptionPane.showMessageDialog(finestraGioco.getFrame(), "Partita salvata correttamente in " + filePath);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(finestraGioco.getFrame(), "Errore durante il salvataggio della partita", "Errore", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
-            }
+        Grid g = Grid.getInstance();
+        String nomeFile = null;
+        String absolutePath = null;
+        JFileChooser jfc = new JFileChooser();
+        int val = jfc.showOpenDialog(null);
+        if(val==JFileChooser.APPROVE_OPTION) {
+            absolutePath = jfc.getSelectedFile().getAbsolutePath();
+            nomeFile = jfc.getSelectedFile().getName();
+            JOptionPane.showMessageDialog(null,"File salvato: "+nomeFile);
+        }
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(absolutePath));
+            PartitaSerializzata info = new PartitaSerializzata(g.getDimension(), g.getGridSerializzazione());
+            oos.writeObject(info);
+            oos.flush();
+            oos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }//salva
 
@@ -319,6 +309,49 @@ public class ConcreteMediator implements Mediator {
         }
     }//aggiornaGriglia
 
+
+
+    public void colora(){
+        Grid g = Grid.getInstance();
+        Map<Cage, LinkedList<Cell>> list = new HashMap<>();
+        for(int i=0; i<g.getDimension(); i++){
+            for(int j=0; j<g.getDimension(); j++){
+                Cage c = g.getCell(i,j).getConstraint();
+                if(!list.keySet().contains(g.getCell(i,j).getConstraint())){
+                    list.put(c,c.getCells());
+                }
+            }
+        }
+        Set<Color> usedColors = new HashSet<>();
+        List<Color> colorPalette = Arrays.asList(Color.GREEN,Color.MAGENTA,Color.CYAN,Color.ORANGE,Color.PINK,Color.GRAY,Color.DARK_GRAY,Color.white,Color.LIGHT_GRAY,Color.yellow);
+        usedColors.add(Color.RED);
+        Iterator<Color> colorIterator = colorPalette.iterator();
+        Random rand = new Random();
+
+        for (Map.Entry<Cage, LinkedList<Cell>> entry : list.entrySet()) {
+            LinkedList<Cell> cells = entry.getValue();
+            Cage cage = entry.getKey();
+            Color color;
+
+            if (colorIterator.hasNext()) {
+                color = colorIterator.next();
+            } else {
+                // Genera un colore casuale che non è rosso
+                do {
+                    color = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+                } while (color.equals(Color.RED) || usedColors.contains(color));
+            }
+
+            usedColors.add(color);
+
+            for (Cell cell : cells) {
+                int x = cell.getX();
+                int y = cell.getY();
+                finestraGioco.getCelle()[x][y].setBackground(color);
+                finestraGioco.getLabelTargets()[x][y].setText(cage.toString());
+            }
+        }
+    }//colora
 
 
 }//ConcreteMediator

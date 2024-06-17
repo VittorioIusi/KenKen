@@ -2,10 +2,12 @@ package main.griglia.componenti;
 import main.backtracking.Risolutore;
 import main.griglia.GeneraGriglia;
 import main.griglia.Memento;
+
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Grid {
+public class Grid implements Serializable {
    private static Cell[][] grid;
    private static int dimensione;
    private static Grid INSTANCE;
@@ -189,6 +191,14 @@ public class Grid {
 
     public Risolutore getRisolutore(){
         return Risolutore.getInstance(this);
+    }
+
+    public Cell[][] getGridSerializzazione(){
+       return grid;
+    }
+
+    public void cambiaRiferimento(Cell[][]t){
+       grid=t;
     }
 
 

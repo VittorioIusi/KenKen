@@ -1,11 +1,12 @@
 package main.griglia.componenti;
 
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Cell {
+public class Cell implements Serializable {
     private int x;
     private int y;
     private int val;

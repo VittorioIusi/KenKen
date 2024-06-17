@@ -134,7 +134,7 @@ public class FinestraGioco extends JFrame implements ActionListener {
         }
     }
 
-    private void creaCageGrafici() {
+    public void creaCageGrafici() {
         Map<Cage, LinkedList<Cell>> cageMap = g.getGeneratore().getCageCell();
         Set<Color> usedColors = new HashSet<>();
         List<Color> colorPalette = Arrays.asList(Color.GREEN,Color.MAGENTA,Color.CYAN,Color.ORANGE,Color.PINK,Color.GRAY,Color.DARK_GRAY,Color.white,Color.LIGHT_GRAY,Color.yellow);
@@ -226,6 +226,10 @@ public class FinestraGioco extends JFrame implements ActionListener {
         return celle;
     }
 
+    public JLabel[][] getLabelTargets() {
+        return labelTargets;
+    }
+
     public JButton getRisolviButton() {
         return risolviButton;
     }
@@ -294,5 +298,9 @@ public class FinestraGioco extends JFrame implements ActionListener {
             g.getCell(x,y).clean();
         }
     }
+
+
+
+
 }//FinestraGioco
 

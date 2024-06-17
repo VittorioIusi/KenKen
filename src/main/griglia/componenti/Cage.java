@@ -2,11 +2,12 @@ package main.griglia.componenti;
 
 import main.griglia.Operazione;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class Cage {
+public class Cage implements Serializable {
     private LinkedList<Cell> cells;
     private Operazione op;
     private int target;

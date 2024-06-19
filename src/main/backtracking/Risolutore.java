@@ -1,6 +1,5 @@
 package main.backtracking;
 
-import main.griglia.Memento;
 import main.griglia.componenti.Cell;
 import main.griglia.componenti.Grid;
 

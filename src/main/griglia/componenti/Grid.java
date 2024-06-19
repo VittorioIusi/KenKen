@@ -1,13 +1,14 @@
 package main.griglia.componenti;
 import main.backtracking.Risolutore;
 import main.griglia.GeneraGriglia;
-import main.griglia.Memento;
+import main.griglia.interfacce.Memento;
+import main.griglia.interfacce.Originator;
 
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Grid implements Serializable {
+public class Grid implements Serializable, Originator {
    private static Cell[][] grid;
    private static int dimensione;
    private static Grid INSTANCE;
@@ -211,18 +212,45 @@ public class Grid implements Serializable {
             }
         }
         //System.out.println(ret);
-        return new Memento(ret);
+        return new GridMemento(ret);
     }
 
 
     public void setMemento(Memento memento) {
+        if(!(memento instanceof GridMemento ))
+            throw new IllegalArgumentException();
+        GridMemento gridMem = (GridMemento) memento;
         clean();
-        Cell[][] g = memento.getGriglia();
+        Cell[][] g = gridMem.getGriglia();
         for (int i = 0; i < dimensione; i++) {
             for (int j = 0; j < dimensione; j++) {
                 addValue(g[i][j].getValue(),g[i][j].getX(),g[i][j].getY());
             }
         }
     }//setMemento
+
+
+    private class GridMemento implements Memento {
+        private Cell[][] griglia;
+
+        private GridMemento(Cell[][] m){
+            this.griglia = m;
+        }
+
+        private Cell[][] getGriglia(){
+            return this.griglia;
+        }
+
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < griglia.length; i++) {
+                sb.append("\n");
+                for (int j = 0; j < griglia.length; j++) {
+                    sb.append(griglia[i][j].toString() + "\s");
+                }
+            }
+            return sb.toString();
+        }
+    }//Memento
 
 }//Grid

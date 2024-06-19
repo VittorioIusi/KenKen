@@ -2,10 +2,11 @@ package main.grafica.pannelli;
 
 
 import main.grafica.mediator.Mediator;
-import main.griglia.Memento;
+
 import main.griglia.componenti.Cage;
 import main.griglia.componenti.Cell;
 import main.griglia.componenti.Grid;
+import main.griglia.interfacce.Memento;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

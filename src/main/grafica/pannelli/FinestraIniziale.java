@@ -1,6 +1,6 @@
 package main.grafica.pannelli;
 
-import main.grafica.mediator.ConcreteMediator;
+
 import main.grafica.mediator.Mediator;
 
 import javax.swing.JButton;

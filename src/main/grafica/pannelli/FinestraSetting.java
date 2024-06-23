@@ -3,11 +3,9 @@ package main.grafica.pannelli;
 import main.grafica.mediator.Mediator;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+
 
 public class FinestraSetting extends JFrame implements ActionListener {
     private Mediator mediator;

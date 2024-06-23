@@ -288,8 +288,7 @@ public class FinestraGioco extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(frame, "Inserisci un numero >0 e <dimensione.", "Errore", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (NumberFormatException e) {
-                // Se il testo inserito non è un numero valido, gestisci l'eccezione qui
-                // Ad esempio, mostra un messaggio di errore o reimposta il testo del JTextField
+
                 JOptionPane.showMessageDialog(frame, "Inserisci un numero valido.", "Errore", JOptionPane.ERROR_MESSAGE);
                 // Reset del testo del JTextField
                 celle[x][y].setText("");

@@ -227,7 +227,7 @@ public class Grid implements Serializable, Originator {
                 addValue(g[i][j].getValue(),g[i][j].getX(),g[i][j].getY());
             }
         }
-    }//setMemento
+    }//setMemento-
 
 
     private class GridMemento implements Memento {
